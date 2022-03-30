@@ -25,7 +25,7 @@ const ProductShema = new mongoose.Schema(
     seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    catagory: { type: String, required: true },
+    category: { type: String, required: true },
     inStock: { type: Boolean, required: true, default: true },
     expiryTime: { type: String, required: true },
     price: { type: Number, required: true },

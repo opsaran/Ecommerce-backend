@@ -16,7 +16,14 @@ export async function updateCart(
   update: UpdateQuery<cartDocumentInterface>,
   options: QueryOptions = { lean: true, new: true }
 ) {
-  return await CartModel.findOneAndUpdate(query, update, options);
+  return await CartModel.findOneAndUpdate(query, update, options).populate({
+    path: "products",
+    populate: {
+      path: "_id",
+      model: "Product",
+      select: "_id title inStock price images",
+    },
+  });
 }
 
 export async function findCartAndProducts(

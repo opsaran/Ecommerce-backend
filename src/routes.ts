@@ -98,7 +98,7 @@ export default function routes(app: Express) {
   );
 
   app.put(
-    "/api/cart/editProductInCart",
+    "/api/cart/editProductInCart/:cartId",
     sayshi,
     requireUser,
     validateResource(editProductInCart),

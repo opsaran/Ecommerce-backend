@@ -59,12 +59,12 @@ export async function editProdroductInCartHandler(
         },
       },
       {
-        arrayFilters: [{ "elem.product": req.body.product.product }],
+        arrayFilters: [{ "elem._id": req.body.product.product }],
         lean: true,
         new: true,
       }
     );
-    return res.status(200).json({ success: true, cart: newCartData });
+    return res.status(200).json({ success: true, fullCart: newCartData });
   } catch (error) {
     return res.status(400).json({
       success: false,
