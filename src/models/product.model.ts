@@ -5,12 +5,12 @@ export interface productinputInterface {
   seller: userDocumentInterface["_id"];
   title: string;
   description: string;
-  catagory: string;
+  category: string;
   inStock: boolean;
   expiryTime: string;
   price: number;
   defaultQuantity: string;
-  images: { image1: string; image2?: string; image3?: string };
+  images: { name: string; type: string; size: number; imgBuffer: Buffer }[];
 }
 
 export interface productDocumentInterface
@@ -19,6 +19,25 @@ export interface productDocumentInterface
   createdAt: Date;
   updatedAt: Date;
 }
+
+const imgObj = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  size: {
+    type: Number,
+    required: true,
+  },
+  imgBuffer: {
+    type: Buffer,
+    required: true,
+  },
+});
 
 const ProductShema = new mongoose.Schema(
   {
@@ -30,11 +49,7 @@ const ProductShema = new mongoose.Schema(
     expiryTime: { type: String, required: true },
     price: { type: Number, required: true },
     defaultQuantity: { type: String, required: true },
-    images: {
-      image1: { type: String, required: true },
-      image2: { type: String },
-      image3: { type: String },
-    },
+    images: [imgObj],
   },
   { timestamps: true, collection: "products" }
 );

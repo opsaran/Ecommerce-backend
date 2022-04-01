@@ -36,6 +36,7 @@ import {
   editProdroductInCartHandler,
   findCartAndProductsHandler,
 } from "./controller/cart.controller";
+import createProductBySellerHandler from "./controller/seller.controller";
 
 export default function routes(app: Express) {
   app.get("/checkhealth?", (req: Request, res: Response) => {
@@ -73,9 +74,9 @@ export default function routes(app: Express) {
   app.get("/api/featuredproducts", sayshi, getFeaturedTenProducts);
   app.get("/api/product/:id", sayshi, getProductHandler);
   app.post(
-    "/api/internal/createproduct",
+    "/api/seller/createproduct",
     sayshi,
-
+    requireUser,
     validateResource(createProductSchema),
     createProductHandler
   );
@@ -118,4 +119,6 @@ export default function routes(app: Express) {
     validateResource(getCartWithProductsSchema),
     findCartAndProductsHandler
   );
+
+  // app.post("/api/seller/product", sayshi, createProductBySellerHandler);
 }

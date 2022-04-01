@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AnyKeys } from "mongoose";
-import { productinputInterface } from "../models/product.model";
+
 import {
   createProductInput,
   deleteProductInput,
@@ -21,12 +20,24 @@ export async function createProductHandler(
   res: Response,
   next: NextFunction
 ) {
+  console.log("request here ");
   const user: jwtPayloadInterface = res.locals.user;
+
+  const newImagesArray = req.body.images.map((obj) => {
+    return {
+      name: obj.name,
+      type: obj.type,
+      size: obj.size,
+      imgBuffer: Buffer.from(obj.base64, "base64"),
+    };
+  });
+  const newData = { ...req.body, ["images"]: newImagesArray };
   try {
-    const product = await createProduct({ seller: user._id, ...req.body });
-    res.status(200).send(product);
+    const product = await createProduct({ seller: user._id, ...newData });
+    console.log("sending back");
+    return res.status(200).json({ success: true, product });
   } catch (err: any) {
-    res.status(400).send(err.errors);
+    return res.status(400).send({ success: false, error: err.errors });
   }
 }
 

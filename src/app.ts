@@ -9,7 +9,7 @@ import routes from "./routes";
 import cookieParser from "cookie-parser";
 import deserializeUser from "./middleware/deserializeUser";
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: 3145728 }));
 app.use(
   cors({
     origin: config.get("origin"),

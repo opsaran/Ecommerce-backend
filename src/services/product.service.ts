@@ -3,7 +3,7 @@ import productModel, {
   productDocumentInterface,
   productinputInterface,
 } from "../models/product.model";
-import { createProductInput } from "../schema/product.schema";
+// import { createProductInput } from "../schema/product.schema";
 
 export async function createProduct(input: productinputInterface) {
   return productModel.create(input);
