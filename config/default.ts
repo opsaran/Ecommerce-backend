@@ -1,6 +1,6 @@
 export default {
   port: 8000,
-  origin: "http://localhost:3000",
+  origin: ``,
   dbUri: "mongodb://localhost:27017/brandstore",
   saltWorkFactor: 10,
   accessTokenTtl: "15m",
