@@ -48,10 +48,6 @@ export default function routes(app: Express) {
     logger.info("Someone pinged here");
     return next();
   };
-  const checkheaders = (req: Request, res: Response, next: NextFunction) => {
-    console.log("headers here:", req.headers);
-    return next();
-  };
 
   app.post(
     "/api/register",
