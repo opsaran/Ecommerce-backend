@@ -25,10 +25,7 @@
   "scripts": {
     "start": "SET NODE_CONFIG_DIR=./build/config node build/src/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "npm run build:ts && npm run build:post",
-    "build:ts": "tsc",
-    "build:post": "npm run build:post:replace",
-    "build:post:replace": "replace \"exports\\.default\" \"module.exports\" ./build/config/*.js"
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
