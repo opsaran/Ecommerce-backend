@@ -32,7 +32,7 @@ const UserSchema = new mongoose.Schema(
     firstName: { required: true, type: String },
     lastName: { required: false, type: String },
     password: { required: true, type: String },
-    isSeller: { type: Boolean, default: false },
+    isSeller: { type: Boolean, default: true },
     phoneNumber: Number,
     address: {
       address1: String,

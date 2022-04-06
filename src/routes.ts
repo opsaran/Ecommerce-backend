@@ -8,11 +8,12 @@ import { createUserSchema } from "./schema/user.schema";
 import {
   createProductSchema,
   deleteProductSchema,
+  getFeaturedProductsSchema,
 } from "./schema/product.schema";
 import {
   createProductHandler,
   deleteProductHandler,
-  getFeaturedTenProducts,
+  getFeaturedProducts,
   getProductHandler,
 } from "./controller/product.controller";
 import logger from "./utils/logger";
@@ -36,7 +37,6 @@ import {
   editProdroductInCartHandler,
   findCartAndProductsHandler,
 } from "./controller/cart.controller";
-import createProductBySellerHandler from "./controller/seller.controller";
 
 export default function routes(app: Express) {
   app.get("/checkhealth?", (req: Request, res: Response) => {
@@ -71,7 +71,12 @@ export default function routes(app: Express) {
   app.get("/api/sessions", sayshi, requireUser, getUserSessionHandler);
   app.delete("/api/session", sayshi, requireUser, deleteUserSessionHandler);
 
-  app.get("/api/featuredproducts", sayshi, getFeaturedTenProducts);
+  app.get(
+    "/api/featuredproducts",
+    sayshi,
+    validateResource(getFeaturedProductsSchema),
+    getFeaturedProducts
+  );
   app.get("/api/product/:id", sayshi, getProductHandler);
   app.post(
     "/api/seller/createproduct",

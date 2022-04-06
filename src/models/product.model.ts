@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 import { userDocumentInterface } from "./user.model";
 
 export interface productinputInterface {
@@ -18,6 +19,7 @@ export interface productDocumentInterface
     mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
+  documentWithImgPath: any;
 }
 
 const imgObj = new mongoose.Schema({
@@ -53,6 +55,23 @@ const ProductShema = new mongoose.Schema(
   },
   { timestamps: true, collection: "products" }
 );
+
+ProductShema.index({ seller: 1 });
+
+ProductShema.virtual("documentWithImgPath").get(function (this: any) {
+  const newImgaesData = this.images.map((imgObj: any) => {
+    return {
+      name: imgObj.name,
+      type: imgObj.type,
+      size: imgObj.size,
+      base64: `data:${
+        imgObj.type
+      };charset=utf-8;base64,${imgObj.imgBuffer.toString("base64")}`,
+    };
+  });
+
+  return { ...this._doc, ["images"]: newImgaesData };
+});
 
 const productModel = mongoose.model<productDocumentInterface>(
   "Product",

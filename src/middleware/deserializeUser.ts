@@ -9,7 +9,7 @@ export default async function deserializeUser(
   res: Response,
   next: NextFunction
 ) {
-  console.log("in deserialize start");
+  console.log("in deserialize start, config.get: ", config.get("publicKey"));
   const accessToken =
     get(req, "cookies.accessToken") ||
     get(req, "headers.authorization", "").replace(/^Bearer\s/, "");

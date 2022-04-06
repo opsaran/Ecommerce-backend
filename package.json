@@ -2,10 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app.js",
+  "main": "build/app.js",
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
-    "@types/busboy": "^1.5.0",
     "@types/config": "0.0.40",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
@@ -21,16 +20,18 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "SET NODE_CONFIG_DIR=./build/config node build/src/app.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsc -p ."
+    "build": "npm run build:ts && npm run build:post",
+    "build:ts": "tsc",
+    "build:post": "npm run build:post:replace",
+    "build:post:replace": "replace \"exports\\.default\" \"module.exports\" ./build/config/*.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
-    "busboy": "^1.5.0",
     "config": "^3.3.6",
     "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",

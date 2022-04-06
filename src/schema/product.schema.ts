@@ -1,4 +1,4 @@
-import { boolean, number, object, string, optional, TypeOf, array } from "zod";
+import { z, boolean, number, object, string, TypeOf, array } from "zod";
 
 const img = object({
   name: string({ required_error: "There must be a name of image" }).max(
@@ -28,31 +28,23 @@ const payload = {
     })
       .min(5, "description is too small")
       .max(300, "Please keep description within 300 characters"),
-    category: string({ required_error: "please provide a suitable catagory" })
-      .min(2, "catagory is invalid")
-      .max(10, "catagory is invalid"),
+    category: z.enum(["fashion", "food", "electronics", "book", "grocery"]),
     inStock: boolean({
       required_error: "please provide whether item is in stock or not",
     }),
-    expiryTime: string({ required_error: "please provide an expiray time" })
-      .min(2, "expiraytime is invalid")
-      .max(40, "expiraytime is invalid"),
+    expiryTime: z.enum([
+      "none",
+      "1 month",
+      "2 month",
+      "3 month",
+      "4 month",
+      "5 month",
+      "6 month",
+    ]),
     price: number({ required_error: "Please provide price of the item" })
       .min(0, "hah, too cheap. Increase the price maybe")
       .max(10000, "Nobody will buy such a costly thing"),
-    defaultQuantity: string({
-      required_error: "Please enter a default qantity",
-    })
-      .min(0, "Enter a valid quantity")
-      .max(20, "Enter a valid quantity"),
-
-    // images: object({
-    //   image1: string({ required_error: "Please provide at least one image" })
-    //     .min(2, "Enter a valid image address")
-    //     .max(1000, "Enter a valid address"),
-    //   image2: string().optional(),
-    //   image3: string().optional(),
-    // }),
+    defaultQuantity: z.enum(["1 unit", "1 litre", "1 kg"]),
     images: array(img)
       .max(3, "Maximum number of images is 3")
       .nonempty("Please select atleast one image"),
@@ -65,6 +57,12 @@ const params = {
       200,
       "Invalid request"
     ),
+  }),
+};
+
+const query = {
+  query: object({
+    page: string({ required_error: "Page number required" }),
   }),
 };
 
@@ -85,7 +83,14 @@ export const deleteProductSchema = object({
   ...params,
 });
 
+export const getFeaturedProductsSchema = object({
+  ...query,
+});
+
 export type createProductInput = TypeOf<typeof createProductSchema>;
 export type modifyProductInput = TypeOf<typeof modifyProductSchema>;
 export type findProductInput = TypeOf<typeof getProductSchema>;
 export type deleteProductInput = TypeOf<typeof deleteProductSchema>;
+export type getFeaturedProductsSchemaType = TypeOf<
+  typeof getFeaturedProductsSchema
+>;

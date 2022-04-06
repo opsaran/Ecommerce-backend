@@ -16,8 +16,18 @@ export async function findProduct(
   return productModel.findOne(query, null, options);
 }
 
-export async function findProducts(limit: number) {
-  return productModel.find().limit(limit).lean(true);
+export async function findEstimatedDocumentCount(
+  query: FilterQuery<productDocumentInterface>
+) {
+  return productModel.estimatedDocumentCount(query);
+}
+
+export async function findFeaturedProducts(
+  query: FilterQuery<productDocumentInterface>,
+  skip: number,
+  limit: number
+) {
+  return productModel.find(query).skip(skip).limit(limit);
 }
 
 export async function updateProduct(

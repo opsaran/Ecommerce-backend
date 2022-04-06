@@ -4,6 +4,7 @@ import {
   createProductInput,
   deleteProductInput,
   findProductInput,
+  getFeaturedProductsSchemaType,
   modifyProductInput,
 } from "../schema/product.schema";
 import {
@@ -11,7 +12,8 @@ import {
   findProduct,
   deleteProduct,
   updateProduct,
-  findProducts,
+  findEstimatedDocumentCount,
+  findFeaturedProducts,
 } from "../services/product.service";
 import { jwtPayloadInterface } from "../types/input.types";
 
@@ -34,10 +36,11 @@ export async function createProductHandler(
   const newData = { ...req.body, ["images"]: newImagesArray };
   try {
     const product = await createProduct({ seller: user._id, ...newData });
-    console.log("sending back");
-    return res.status(200).json({ success: true, product });
+    if (product) {
+      return res.status(200).json({ success: true });
+    }
   } catch (err: any) {
-    return res.status(400).send({ success: false, error: err.errors });
+    return res.status(400).json({ success: false, error: err.errors });
   }
 }
 
@@ -64,16 +67,41 @@ export async function getProductHandler(
 ) {
   try {
     const product = await findProduct({ _id: req.params.id });
-    return res.status(200).json({ success: false, product: product });
+    if (product) {
+      const newProduct = product.documentWithImgPath;
+      return res.status(200).json({ success: true, product: newProduct });
+    }
   } catch (err: any) {
     return res.status(404).json({ success: false, message: err.message });
   }
 }
 
-export async function getFeaturedTenProducts(req: Request, res: Response) {
+type ParsedQs = {
+  page: number;
+};
+export async function getFeaturedProducts(req: Request, res: Response) {
+  const ItemsPerPage = 8;
+  const query = {};
+  const page = (req.query.page as unknown as number) || 1;
+  const skip = (page - 1) * ItemsPerPage; //starting from page 1 that's why
   try {
-    const featuredProducts = await findProducts(12);
-    return res.status(200).json({ success: true, featuredProducts });
+    const countPromise = findEstimatedDocumentCount(query);
+    const featuredProductsPromise = findFeaturedProducts(
+      query,
+      skip,
+      ItemsPerPage
+    );
+    const [count, featuredProducts] = await Promise.all([
+      countPromise,
+      featuredProductsPromise,
+    ]);
+    const totalPages = Math.ceil(count / ItemsPerPage);
+    const newDocArray = featuredProducts.map((doc) => doc.documentWithImgPath);
+    return res.status(200).json({
+      success: true,
+      featuredProducts: newDocArray,
+      pagination: { page, totalPages },
+    });
   } catch (err: any) {
     return res.status(500).json({
       success: false,
@@ -84,8 +112,7 @@ export async function getFeaturedTenProducts(req: Request, res: Response) {
 
 export async function deleteProductHandler(
   req: Request<deleteProductInput["params"]>,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) {
   try {
     const product = await deleteProduct({ _id: req.params.id });

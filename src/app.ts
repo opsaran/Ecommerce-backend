@@ -1,8 +1,9 @@
 import express from "express";
-// import dotenv from "dotenv";
+import dotenv from "dotenv";
+dotenv.config();
 import config from "config";
 import cors from "cors";
-import connectMongo from "connect-mongo";
+
 import connect from "./utils/connect";
 import logger from "./utils/logger";
 import routes from "./routes";
@@ -12,9 +13,10 @@ const app = express();
 app.use(express.json({ limit: 3145728 }));
 app.use(
   cors({
-    origin: config.get("origin"),
-    exposedHeaders: ["Authorization", "x-refresh"],
-    credentials: true,
+    origin: config.get<string>("origin"),
+    // exposedHeaders: ["Authorization", "x-refresh"], //required for Header based auth
+    credentials: true, //for cookies
+    optionsSuccessStatus: 200, //for some some legacy browsers like IE11
   })
 );
 app.use(cookieParser());
