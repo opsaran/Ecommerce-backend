@@ -1,5 +1,5 @@
 export default {
-  port: 8000,
+  port: ``,
   origin: ``,
   dbUri: ``,
   saltWorkFactor: 10,

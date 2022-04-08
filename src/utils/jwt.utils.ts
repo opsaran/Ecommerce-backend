@@ -1,7 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "config";
-const privateKey = config.get<string>("privateKey");
-const publicKey = config.get<string>("publicKey");
+
+const privateKey = JSON.parse(config.get<string>("privateKey"));
+const publicKey = JSON.parse(config.get<string>("publicKey"));
 export function signJwt(
   object: object,
   signOptions?: jwt.SignOptions | undefined

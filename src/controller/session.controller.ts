@@ -48,31 +48,34 @@ export async function createUserSessionHandler(
       { expiresIn: config.get<string>("refreshTokenTtl") }
     );
     const fullname = user.firstName + " " + user.lastName;
-    console.log("before setting up accesstoken, in session.controller");
-    //setting the cookies
-    res.clearCookie("accessToken");
-    res.clearCookie("refreshToken");
-    res.cookie("accessToken", accessToken, {
-      maxAge: config.get("refreshTokenCookieMaxAge"),
-      domain: "memazon-app.herokuapp.com", //localhost
-      httpOnly: true,
-      path: "/",
-      sameSite: "none",
-      secure: true,
-    });
-    res.cookie("refreshToken", refreshToken, {
-      maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
-      domain: "memazon-app.herokuapp.com", //localhost
-      httpOnly: true,
-      path: "/",
-      sameSite: "none",
-      secure: true,
-    });
 
-    //sending accessToken and refreshToken
-    res.setHeader("Authorization", accessToken);
-    res.setHeader("x-refresh", refreshToken);
-    return res.status(200).json({ success: true, name: fullname });
+    //setting the cookies
+    if (refreshToken && accessToken) {
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken");
+      console.log("before setting up accesstoken, in session.controller");
+      res.cookie("accessToken", accessToken, {
+        maxAge: config.get("accessTokenCookieMaxAge"),
+        domain: "memazon-app.herokuapp.com", //localhost   or memazon-app.herokuapp.com
+        httpOnly: true,
+        path: "/",
+        sameSite: "none",
+        secure: true,
+      });
+      res.cookie("refreshToken", refreshToken, {
+        maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
+        domain: "memazon-app.herokuapp.com", //localhost   or memazon-app.herokuapp.com
+        httpOnly: true,
+        path: "/",
+        sameSite: "none",
+        secure: true,
+      });
+
+      //sending accessToken and refreshToken
+      // res.setHeader("Authorization", accessToken);
+      // res.setHeader("x-refresh", refreshToken);
+      return res.status(200).json({ success: true, name: fullname });
+    }
   } catch (error) {
     res
       .status(500)

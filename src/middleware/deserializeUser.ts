@@ -9,15 +9,12 @@ export default async function deserializeUser(
   res: Response,
   next: NextFunction
 ) {
-  const accessToken =
-    get(req, "cookies.accessToken") ||
-    get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
+  const accessToken = get(req, "cookies.accessToken"); //  || get(req, "headers.authorization", "").replace(/^Bearer\s/, "");
   //For first time login with no tokes
 
   // alternatively  req.headers.authorization
 
-  const refreshToken =
-    get(req, "cookies.refreshToken") || get(req, "headers.x-refresh");
+  const refreshToken = get(req, "cookies.refreshToken"); //    || get(req, "headers.x-refresh");
 
   if (!accessToken) return next();
 
@@ -35,10 +32,10 @@ export default async function deserializeUser(
   if (expired && refreshToken) {
     const newAccessToken = await reIssueAccessToken(refreshToken);
     if (!newAccessToken) return next();
-    res.setHeader("Authorization", newAccessToken);
+    // res.setHeader("Authorization", newAccessToken);
     console.log("before issuing new access token: ");
     res.cookie("accessToken", newAccessToken, {
-      maxAge: config.get("refreshTokenCookieMaxAge"), // 24hrs
+      maxAge: config.get("accessTokenCookieMaxAge"), // 24hrs
       domain: "memazon-app.herokuapp.com",
       httpOnly: true,
       path: "/",
