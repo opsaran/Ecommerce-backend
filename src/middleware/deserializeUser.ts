@@ -39,7 +39,7 @@ export default async function deserializeUser(
     console.log("before issuing new access token: ");
     res.cookie("accessToken", newAccessToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"), // 24hrs
-      domain: "https://memazon.netlify.app",
+      domain: ".netlify.app",
       httpOnly: true,
       path: "/",
       sameSite: "none",

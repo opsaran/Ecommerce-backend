@@ -22,56 +22,62 @@ export async function createUserSessionHandler(
 
   //session creation
   const userId = user._id as unknown as string;
-  const session = await createSession(userId, req.get("user-agent") || "");
+  try {
+    const session = await createSession(userId, req.get("user-agent") || "");
 
-  //access token creation
+    //access token creation
 
-  const accessToken = signJwt(
-    {
-      name: user.firstName + " " + user.lastName,
-      email: user.email,
-      _id: user._id,
-      session: session._id,
-    },
-    { expiresIn: config.get<string>("accessTokenTtl") }
-  );
+    const accessToken = signJwt(
+      {
+        name: user.firstName + " " + user.lastName,
+        email: user.email,
+        _id: user._id,
+        session: session._id,
+      },
+      { expiresIn: config.get<string>("accessTokenTtl") }
+    );
 
-  //refresh token creation
-  const refreshToken = signJwt(
-    {
-      name: user.firstName + " " + user.lastName,
-      email: user.email,
-      _id: user._id,
-      session: session._id,
-    },
-    { expiresIn: config.get<string>("refreshTokenTtl") }
-  );
-  const fullname = user.firstName + " " + user.lastName;
-  console.log("before setting up accesstoken, in session.controller");
-  //setting the cookies
-  res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
-  res.cookie("accessToken", accessToken, {
-    maxAge: config.get("refreshTokenCookieMaxAge"),
-    domain: "https://memazon.netlify.app",
-    httpOnly: true,
-    path: "/",
-    sameSite: "strict",
-    secure: true,
-  });
-  res.cookie("refreshToken", refreshToken, {
-    maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
-    domain: "https://memazon.netlify.app",
-    httpOnly: true,
-    path: "/",
-    sameSite: "strict",
-    secure: true,
-  });
+    //refresh token creation
+    const refreshToken = signJwt(
+      {
+        name: user.firstName + " " + user.lastName,
+        email: user.email,
+        _id: user._id,
+        session: session._id,
+      },
+      { expiresIn: config.get<string>("refreshTokenTtl") }
+    );
+    const fullname = user.firstName + " " + user.lastName;
+    console.log("before setting up accesstoken, in session.controller");
+    //setting the cookies
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.cookie("accessToken", accessToken, {
+      maxAge: config.get("refreshTokenCookieMaxAge"),
+      domain: ".netlify.app",
+      httpOnly: true,
+      path: "/",
+      sameSite: "strict",
+      secure: true,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
+      domain: ".netlify.app",
+      httpOnly: true,
+      path: "/",
+      sameSite: "strict",
+      secure: true,
+    });
 
-  //sending accessToken and refreshToken
-  res.setHeader("Authorization", accessToken);
-  res.setHeader("x-refresh", refreshToken);
-  return res.status(200).json({ success: true, name: fullname });
+    //sending accessToken and refreshToken
+    res.setHeader("Authorization", accessToken);
+    res.setHeader("x-refresh", refreshToken);
+    return res.status(200).json({ success: true, name: fullname });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Could not create a session" });
+  }
 }
 
 export async function getUserSessionHandler(
