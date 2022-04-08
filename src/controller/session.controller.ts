@@ -57,7 +57,7 @@ export async function createUserSessionHandler(
       domain: "memazon-app.herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
-      sameSite: "strict",
+      sameSite: "none",
       secure: true,
     });
     res.cookie("refreshToken", refreshToken, {
@@ -65,7 +65,7 @@ export async function createUserSessionHandler(
       domain: "memazon-app.herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
-      sameSite: "strict",
+      sameSite: "none",
       secure: true,
     });
 
