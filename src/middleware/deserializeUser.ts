@@ -43,7 +43,7 @@ export default async function deserializeUser(
       httpOnly: true,
       path: "/",
       sameSite: "strict",
-      secure: false,
+      secure: true,
     });
     const result = verifyJwt(newAccessToken);
     res.locals.user = result.decodedToken;

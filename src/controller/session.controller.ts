@@ -57,7 +57,7 @@ export async function createUserSessionHandler(
     httpOnly: true,
     path: "/",
     sameSite: "strict",
-    secure: false,
+    secure: true,
   });
   res.cookie("refreshToken", refreshToken, {
     maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
@@ -65,7 +65,7 @@ export async function createUserSessionHandler(
     httpOnly: true,
     path: "/",
     sameSite: "strict",
-    secure: false,
+    secure: true,
   });
 
   //sending accessToken and refreshToken
