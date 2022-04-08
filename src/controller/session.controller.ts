@@ -54,7 +54,7 @@ export async function createUserSessionHandler(
     res.clearCookie("refreshToken");
     res.cookie("accessToken", accessToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"),
-      domain: ".netlify.app",
+      domain: ".herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
       sameSite: "strict",
@@ -62,7 +62,7 @@ export async function createUserSessionHandler(
     });
     res.cookie("refreshToken", refreshToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
-      domain: ".netlify.app",
+      domain: ".herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
       sameSite: "strict",
