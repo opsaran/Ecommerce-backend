@@ -54,7 +54,7 @@ export async function createUserSessionHandler(
     res.clearCookie("refreshToken");
     res.cookie("accessToken", accessToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"),
-      domain: ".herokuapp.com", //localhost
+      domain: "memazon-app.herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
       sameSite: "strict",
@@ -62,7 +62,7 @@ export async function createUserSessionHandler(
     });
     res.cookie("refreshToken", refreshToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"), //1 year
-      domain: ".herokuapp.com", //localhost
+      domain: "memazon-app.herokuapp.com", //localhost
       httpOnly: true,
       path: "/",
       sameSite: "strict",

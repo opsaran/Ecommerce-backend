@@ -39,7 +39,7 @@ export default async function deserializeUser(
     console.log("before issuing new access token: ");
     res.cookie("accessToken", newAccessToken, {
       maxAge: config.get("refreshTokenCookieMaxAge"), // 24hrs
-      domain: ".herokuapp.com",
+      domain: "memazon-app.herokuapp.com",
       httpOnly: true,
       path: "/",
       sameSite: "none",
